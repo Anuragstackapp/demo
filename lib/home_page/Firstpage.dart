@@ -3,7 +3,10 @@ import 'package:demo/tab_page/Userpage.dart';
 import 'package:flutter/material.dart';
 
 class Firstpage extends StatefulWidget {
-  const Firstpage({Key? key}) : super(key: key);
+  TabController tabController;
+  Firstpage(this.tabController);
+
+
 
   @override
   State<Firstpage> createState() => _FirstpageState();
@@ -12,21 +15,20 @@ class Firstpage extends StatefulWidget {
 class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMixin{
 
   int curentindex = 0;
-  late TabController tabController;
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    tabController = new TabController(vsync: this, length: 2);
+
   }
 
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   widget.tabController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
         appBar: AppBar(
           title:  Text("Task_Auth"),
           bottom: TabBar(
-            controller: tabController,
+            controller: widget.tabController,
             tabs: [
               Tab(icon: Icon(Icons.login), text: "Login"),
               Tab(icon: Icon(Icons.man_outlined), text: "User")
@@ -45,12 +47,10 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
         ),
 
         body:  TabBarView(
-            controller: tabController,
+            controller: widget.tabController,
             children: [
-              Loginscrren(tabController,),
-              Userpage(tabController),
-
-
+              Loginscrren(widget.tabController,),
+              Userpage(widget.tabController),
 
         ]),
 

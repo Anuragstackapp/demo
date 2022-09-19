@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demo/service/sprfrnce.dart';
 
 // import 'package:demo/Firstpage/Demo.dart';
 import 'package:demo/service/user_model.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Loginscrren extends StatefulWidget {
   TabController tabController;
@@ -91,6 +93,8 @@ class _LoginscrrenState extends State<Loginscrren> {
                       );
                       createUser(userModal);
                       widget.tabController.animateTo(1);
+                      SherdPrefe.prefs = await SharedPreferences.getInstance();
+                      await SherdPrefe.prefs!.setString("login", "yes");
                     }
                     print("Login");
                   },
