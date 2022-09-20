@@ -4,6 +4,7 @@ import 'package:demo/service/sprfrnce.dart';
 
 // import 'package:demo/Firstpage/Demo.dart';
 import 'package:demo/service/user_model.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,8 @@ class Loginscrren extends StatefulWidget {
 class _LoginscrrenState extends State<Loginscrren> {
   TextEditingController temail = TextEditingController();
   TextEditingController tpassword = TextEditingController();
+  bool chack = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +37,7 @@ class _LoginscrrenState extends State<Loginscrren> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              // email
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: TextField(
@@ -45,6 +49,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                   ),
                 ),
               ),
+              //password
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: TextField(
@@ -56,49 +61,111 @@ class _LoginscrrenState extends State<Loginscrren> {
                   ),
                 ),
               ),
+              //forget password
               TextButton(onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return restPassword();
                 },));
               }, child: Text("forgot password")),
+              // login button
               ElevatedButton(
                   onPressed: () async {
-                    try {
-                      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                          email: temail.text,
-                          password: tpassword.text
+
+                    if(!EmailValidator.validate(temail.text) && tpassword.text.length<8){
+
+                      String errorA = "email and password not vaild";
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorA),
+                          action: SnackBarAction(
+                            label: 'Action',
+                            onPressed: () {
+
+                            },
+                          ),
+                        ),
                       );
-                      print(credential);
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'user-not-found') {
-                        print('No user found for that email.');
-                      } else if (e.code == 'wrong-password') {
-                        print('Wrong password provided for that user.');
-                      }
                     }
+                    else if(!EmailValidator.validate(temail.text)){
+
+                      String errorB = "email is Not Vaild!";
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorB),
+                          action: SnackBarAction(
+                            label: 'Action',
+                            onPressed: () {
+
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                    else if(tpassword.text.length<8){
+
+                      String errorC = "Minum 8 lettor in Password";
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(errorC),
+                          action: SnackBarAction(
+                            label: 'Action',
+                            onPressed: () {
+
+                            },
+                          ),
+                        ),
+                      );
+                    }
+
+                    try {
+                          final credential = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: temail.text,
+                            password: tpassword.text,
+                          );
+                          print(credential);
+                          widget.tabController.animateTo(1);
+
+
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'weak-password') {
+                            print('The password provided is too weak.');
+                          } else if (e.code == 'email-already-in-use') {
+                            print('The account already exists for that email.');
+                            try {
+                              final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                  email: temail.text,
+                                  password: tpassword.text
+                              );
+                              widget.tabController.animateTo(1);
+                              print(credential);
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'user-not-found') {
+
+                                print('No user found for that email.');
+                              } else if (e.code == 'wrong-password') {
+                                print('Wrong password provided for that user.');
+                              }
+                            }
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                    //
+
+                    //check
+                    // if(chack == false){
+                    //
+                    //
+                    // }else{
+                    //
+                    // }
+
+
                   },
                   child: const Text("Login")),
-              ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      final credential = await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                        email: temail.text,
-                        password: tpassword.text,
-                      );
-                      print(credential);
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'weak-password') {
-                        print('The password provided is too weak.');
-                      } else if (e.code == 'email-already-in-use') {
-                        print('The account already exists for that email.');
-                      }
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
-                  child: const Text("Submit")),
 
+//google login
               ElevatedButton(
                   onPressed: () async {
                     UserCredential? login = await signInWithGoogle();
@@ -131,6 +198,7 @@ class _LoginscrrenState extends State<Loginscrren> {
     );
   }
 
+  //google sign function
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -150,11 +218,15 @@ class _LoginscrrenState extends State<Loginscrren> {
   }
 
 
-
+//firbase sore in data google
   Future createUser(UserModal userModal) async {
     final firestore =
         FirebaseFirestore.instance.collection("user").doc("${userModal.uId}");
 
     await firestore.set(userModal.toJson());
+  }
+  //
+   snackBar(String error){
+
   }
 }
