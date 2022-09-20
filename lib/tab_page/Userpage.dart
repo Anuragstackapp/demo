@@ -55,6 +55,25 @@ class _UserpageState extends State<Userpage> {
     title: Text(userModal.name!),
     subtitle: Text(userModal.email!),
     leading: Image.network("${userModal.userImage}"),
+    trailing: IconButton(onPressed: () {
+      showDialog(context: context, builder: (context) {
+        return AlertDialog(
+          title: Text("delete"),
+          content: Text("Are You sure to delete this contect"),
+          actions: [
+            TextButton(onPressed: () {
+              final docUser = FirebaseFirestore.instance.collection('user').doc(userModal.uId);
+              docUser.delete();
+              Navigator.pop(context);
+            }, child: Text("Yes")),
+            TextButton(onPressed: () {
+              Navigator.pop(context);
+            }, child: Text("No"))
+          ],
+        );
+      },);
+
+    }, icon: Icon(Icons.delete_forever)),
   );
   Stream<List<UserModal>> readUser() =>
       FirebaseFirestore.instance.collection('user').snapshots().map(

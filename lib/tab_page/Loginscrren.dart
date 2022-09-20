@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demo/home_page/restepassword.dart';
 import 'package:demo/service/sprfrnce.dart';
 
 // import 'package:demo/Firstpage/Demo.dart';
@@ -55,29 +56,48 @@ class _LoginscrrenState extends State<Loginscrren> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        final credential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
+              TextButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return restPassword();
+                },));
+              }, child: Text("forgot password")),
+              ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
                           email: temail.text,
-                          password: tpassword.text,
-                        );
-                        print(credential);
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'weak-password') {
-                          print('The password provided is too weak.');
-                        } else if (e.code == 'email-already-in-use') {
-                          print('The account already exists for that email.');
-                        }
-                      } catch (e) {
-                        print(e);
+                          password: tpassword.text
+                      );
+                      print(credential);
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'user-not-found') {
+                        print('No user found for that email.');
+                      } else if (e.code == 'wrong-password') {
+                        print('Wrong password provided for that user.');
                       }
-                    },
-                    child: const Text("Submit")),
-              ),
+                    }
+                  },
+                  child: const Text("Login")),
+              ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      final credential = await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                        email: temail.text,
+                        password: tpassword.text,
+                      );
+                      print(credential);
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'weak-password') {
+                        print('The password provided is too weak.');
+                      } else if (e.code == 'email-already-in-use') {
+                        print('The account already exists for that email.');
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  child: const Text("Submit")),
 
               ElevatedButton(
                   onPressed: () async {

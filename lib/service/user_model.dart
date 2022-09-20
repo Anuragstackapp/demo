@@ -24,7 +24,7 @@ class UserModal {
   String? userImage;
   String? email;
 
-  factory UserModal.fromJson(Map json) => UserModal(
+  factory UserModal.fromJson(Map  json) => UserModal(
     uId: json["uId"],
     name: json["name"],
     phone: json["phone"],

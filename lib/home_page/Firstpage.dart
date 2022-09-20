@@ -38,6 +38,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
         appBar: AppBar(
           title:  Text("Task_Auth"),
           bottom: TabBar(
+
             controller: widget.tabController,
             tabs: [
               Tab(icon: Icon(Icons.login), text: "Login"),
@@ -47,6 +48,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
         ),
 
         body:  TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             controller: widget.tabController,
             children: [
               Loginscrren(widget.tabController,),
