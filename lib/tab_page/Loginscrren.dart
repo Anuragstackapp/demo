@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/home_page/restepassword.dart';
 import 'package:demo/service/sprfrnce.dart';
@@ -25,7 +27,7 @@ class _LoginscrrenState extends State<Loginscrren> {
   TextEditingController temail = TextEditingController();
   TextEditingController tpassword = TextEditingController();
   bool chack = false;
-
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +56,18 @@ class _LoginscrrenState extends State<Loginscrren> {
                 padding: const EdgeInsets.all(15),
                 child: TextField(
                   controller: tpassword,
-                  decoration: const InputDecoration(
+                  obscureText: _isObscure,
+                  decoration:  InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'password',
                     hintText: 'Enter Your password',
+                    suffixIcon: IconButton(onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    }, icon: Icon(
+                      _isObscure ? Icons.visibility : Icons.visibility_off,
+                    ),),
                   ),
                 ),
               ),
@@ -71,7 +81,18 @@ class _LoginscrrenState extends State<Loginscrren> {
               ElevatedButton(
                   onPressed: () async {
 
-                    if(!EmailValidator.validate(temail.text) && tpassword.text.length<8){
+                    FocusManager.instance.primaryFocus?.unfocus();
+
+
+                    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(temail.text);
+
+                    // String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                    // RegExp regExp = new RegExp(p);
+
+
+
+
+                    if(emailValid == false && tpassword.text.length<8){
 
                       String errorA = "email and password not vaild";
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -86,7 +107,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                         ),
                       );
                     }
-                    else if(!EmailValidator.validate(temail.text)){
+                    else if(emailValid == false){
 
                       String errorB = "email is Not Vaild!";
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -116,17 +137,43 @@ class _LoginscrrenState extends State<Loginscrren> {
                         ),
                       );
                     }
+                    else{
+                      String waiting = "some seconds wait";
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(waiting),
+                          action: SnackBarAction(
+                            label: 'Action',
+                            onPressed: () {
+
+                            },
+                          ),
+                        ),
+                      );
+                    }
 
                     try {
                           final credential = await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
                             email: temail.text,
                             password: tpassword.text,
+
                           );
                           print(credential);
                           widget.tabController.animateTo(1);
 
+                          SherdPrefe.prefs = await SharedPreferences.getInstance();
+                          await SherdPrefe.prefs!.setString("login", "yes");
 
+                          UserModal  usermodel =UserModal(
+                            email: temail.text,
+                            password: tpassword.text,
+                            uId: credential.user!.uid,
+
+                          );
+                          createUsers(usermodel);
+                          temail.clear();
+                          tpassword.clear();
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
                             print('The password provided is too weak.');
@@ -137,6 +184,22 @@ class _LoginscrrenState extends State<Loginscrren> {
                                   email: temail.text,
                                   password: tpassword.text
                               );
+
+                              UserModal  usermodel =UserModal(
+                                email: temail.text,
+                                password: tpassword.text,
+                                uId: credential.user!.uid,
+                              );
+                              if(usermodel.uId == credential.user!.uid)
+                                {
+                                  createUsers(usermodel);
+                                }
+
+
+                              SherdPrefe.prefs = await SharedPreferences.getInstance();
+                              await SherdPrefe.prefs!.setString("login", "yes");
+                              temail.clear();
+                              tpassword.clear();
                               widget.tabController.animateTo(1);
                               print(credential);
                             } on FirebaseAuthException catch (e) {
@@ -145,29 +208,34 @@ class _LoginscrrenState extends State<Loginscrren> {
                                 print('No user found for that email.');
                               } else if (e.code == 'wrong-password') {
                                 print('Wrong password provided for that user.');
+
+                                String errorD = "Wrong password provided for that user.";
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(errorD),
+                                    action: SnackBarAction(
+                                      label: 'Action',
+                                      onPressed: () {
+
+                                      },
+                                    ),
+                                  ),
+                                );
                               }
                             }
                           }
                         } catch (e) {
                           print(e);
                         }
-                    //
-
-                    //check
-                    // if(chack == false){
-                    //
-                    //
-                    // }else{
-                    //
-                    // }
-
-
                   },
                   child: const Text("Login")),
 
 //google login
               ElevatedButton(
                   onPressed: () async {
+
+                    FocusManager.instance.primaryFocus?.unfocus();
+
                     UserCredential? login = await signInWithGoogle();
 
                     if (login.user != null) {
@@ -186,11 +254,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                     print("Login");
                   },
                   child: Text("Google_Sign")),
-              // ElevatedButton(onPressed: () async {
-              //
-              //   await GoogleSignIn().signOut();
-              //   print("Logut");
-              // }, child: Text("Google_Signout")),
+
             ],
           ),
         ),
@@ -225,8 +289,15 @@ class _LoginscrrenState extends State<Loginscrren> {
 
     await firestore.set(userModal.toJson());
   }
-  //
-   snackBar(String error){
 
+  Future createUsers(UserModal usermodel) async {
+    final firestore =
+    FirebaseFirestore.instance.collection("user").doc(usermodel.uId);
+
+    final json = usermodel.toJson();
+
+    await firestore.set(json);
   }
+
+
 }

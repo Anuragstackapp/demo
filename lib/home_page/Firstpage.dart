@@ -37,13 +37,19 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
       child: Scaffold(
         appBar: AppBar(
           title:  Text("Task_Auth"),
-          bottom: TabBar(
+          bottom: PreferredSize(
+            preferredSize: Size(00,55.0),
+            child: IgnorePointer(
+              ignoring: true,
+              child: TabBar(
 
-            controller: widget.tabController,
-            tabs: [
-              Tab(icon: Icon(Icons.login), text: "Login"),
-              Tab(icon: Icon(Icons.man_outlined), text: "User")
-            ],
+                controller: widget.tabController,
+                tabs: [
+                  Tab(icon: Icon(Icons.login), text: "Login"),
+                  Tab(icon: Icon(Icons.man_outlined), text: "User")
+                ],
+              ),
+            ),
           ),
         ),
 
