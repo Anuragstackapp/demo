@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/service/user_model.dart';
+import 'package:demo/model/usermodel/user_model.dart';
 
 class dataRead{
 

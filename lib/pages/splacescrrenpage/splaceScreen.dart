@@ -1,6 +1,6 @@
 
-import 'package:demo/screens/Firstpage.dart';
-import 'package:demo/service/sprfrnce.dart';
+import 'package:demo/pages/firstpage/Firstpage.dart';
+import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +22,7 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
     super.initState();
     abc();
     tabController = new TabController(vsync: this, length: 3);
+
   }
 
   Future abc() async {
@@ -41,8 +42,13 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("Loding...")),
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        body: Center(child: Text("Loding...")),
+      ),
     );
   }
 }

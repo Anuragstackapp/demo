@@ -1,7 +1,7 @@
-import 'package:demo/service/dataRead.dart';
-import 'package:demo/tab_page/Loginscrren.dart';
-import 'package:demo/tab_page/Userpage.dart';
-import 'package:demo/tab_page/adminPage.dart';
+import 'package:demo/model/dataread/dataRead.dart';
+import 'package:demo/pages/loginpage/Loginscrren.dart';
+import 'package:demo/pages/userspage/Userpage.dart';
+import 'package:demo/pages/adminpage/adminPage.dart';
 import 'package:flutter/material.dart';
 
 class Firstpage extends StatefulWidget {

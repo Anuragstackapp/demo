@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/screens/restepassword.dart';
-import 'package:demo/service/sprfrnce.dart';
-import 'package:demo/service/user_model.dart';
+import 'package:demo/pages/restpasswordpage/restepassword.dart';
+import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
+import 'package:demo/model/usermodel/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -67,6 +67,34 @@ class _LoginscrrenState extends State<Loginscrren> {
                     ),
                   ),
                 ),
+              ),
+              //Admin / User
+
+              Row(
+                children: [
+
+                  SizedBox(width: 80),
+                  Radio(
+                    value: "Admin",
+                    groupValue: _character,
+                    onChanged: (value) {
+                      setState(() {
+                        _character = value.toString();
+                      });
+                    },
+                  ),
+                  Text("Admin"),
+                  Radio(
+                    value: "User",
+                    groupValue: _character,
+                    onChanged: (value) {
+                      setState(() {
+                        _character = value.toString();
+                      });
+                    },
+                  ),
+                  Text("User"),
+                ],
               ),
               //forget password
               TextButton(
@@ -236,48 +264,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                     print("Login");
                   },
                   child: Text("Google_Sign")),
-              //Admin / User
 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Row(
-                      children: [
-                        Expanded(
-                          child: Radio(
-                            value: "Admin",
-                            groupValue: _character,
-                            onChanged: (value) {
-                              setState(() {
-                                _character = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: Text("Admin"),
-                        ),
-                        Expanded(
-                          child: Radio(
-                            value: "User",
-                            groupValue: _character,
-                            onChanged: (value) {
-                              setState(() {
-                                _character = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: Text("User"),
-                        )
-                      ],
-                    )),
-                  ],
-                ),
-              ),
             ],
           ),
         ),

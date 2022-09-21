@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/service/sprfrnce.dart';
+import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../service/dataRead.dart';
-import '../service/user_model.dart';
+import '../../model/dataread/dataRead.dart';
+import '../../model/usermodel/user_model.dart';
 
 class Userpage extends StatefulWidget {
   TabController tabController;
@@ -20,33 +20,38 @@ class Userpage extends StatefulWidget {
 class _UserpageState extends State<Userpage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await GoogleSignIn().signOut();
-            print("Logut");
-            widget.tabController.animateTo(0);
-            SherdPrefe.prefs = await SharedPreferences.getInstance();
-            SherdPrefe.prefs!.clear();
-          },
-          child: Icon(Icons.logout)),
-      body: StreamBuilder<List<UserModal>>(
-        stream: dataRead().readUser(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Somthing is wrong');
-          } else if (snapshot.hasData) {
-            final user = snapshot.data!;
+    return GestureDetector(
+         onTap: () {
+           FocusManager.instance.primaryFocus?.unfocus();
+         },
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              await GoogleSignIn().signOut();
+              print("Logut");
+              widget.tabController.animateTo(0);
+              SherdPrefe.prefs = await SharedPreferences.getInstance();
+              SherdPrefe.prefs!.clear();
+            },
+            child: Icon(Icons.logout)),
+        body: StreamBuilder<List<UserModal>>(
+          stream: dataRead().readUser(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Somthing is wrong');
+            } else if (snapshot.hasData) {
+              final user = snapshot.data!;
 
-            return ListView(
-              children: user.map(buildUser).toList(),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+              return ListView(
+                children: user.map(buildUser).toList(),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       ),
     );
   }
