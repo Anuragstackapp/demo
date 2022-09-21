@@ -1,4 +1,5 @@
-import 'package:demo/home_page/Firstpage.dart';
+
+import 'package:demo/screens/Firstpage.dart';
 import 'package:demo/service/sprfrnce.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +21,7 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
     // TODO: implement initState
     super.initState();
     abc();
-    tabController = new TabController(vsync: this, length: 2);
+    tabController = new TabController(vsync: this, length: 3);
   }
 
   Future abc() async {
@@ -31,7 +32,7 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
    },));
    SherdPrefe.prefs = await SharedPreferences.getInstance();
    if(SherdPrefe.prefs!.containsKey("login")){
-     tabController.animateTo(1);
+     tabController.animateTo(2);
    }
    else{
      tabController.animateTo(0);

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../service/dataRead.dart';
 import '../service/user_model.dart';
 
 class Userpage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _UserpageState extends State<Userpage> {
           },
           child: Icon(Icons.logout)),
       body: StreamBuilder<List<UserModal>>(
-        stream: readUser(),
+        stream: dataRead().readUser(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Somthing is wrong');
@@ -87,16 +88,11 @@ class _UserpageState extends State<Userpage> {
             icon: Icon(Icons.delete_forever)),
       );
 
-  Stream<List<UserModal>> readUser() =>
-      FirebaseFirestore.instance.collection('user').snapshots().map(
-            (snapshot) => snapshot.docs
-                .map((doc) => UserModal.fromJson(doc.data()))
-                .toList(),
-          );
+
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signOut();
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
