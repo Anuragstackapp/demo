@@ -4,6 +4,9 @@ import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
 import 'package:demo/model/usermodel/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -181,7 +184,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                         email: temail.text,
                         password: tpassword.text,
                         uId: credential.user!.uid,
-                        name: _character,
+                        type: _character
                       );
                       createUsers(usermodel);
                       temail.clear();
@@ -200,7 +203,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                               email: temail.text,
                               password: tpassword.text,
                               uId: credential.user!.uid,
-                              name: _character,
+                              type: _character,
 
                           );
                           if (usermodel.uId == credential.user!.uid) {
@@ -240,30 +243,34 @@ class _LoginscrrenState extends State<Loginscrren> {
                   },
                   child: const Text("Login")),
               //google login
-              ElevatedButton(
-                  onPressed: () async {
-                    FocusManager.instance.primaryFocus?.unfocus();
+              GFButton(onPressed: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
 
-                    UserCredential? login = await signInWithGoogle();
+                UserCredential? login = await signInWithGoogle();
 
-                    if (login.user != null) {
-                      UserModal userModal = UserModal(
-                        email: login.user!.email,
-                        name: login.user!.displayName,
-                        phone: login.user!.phoneNumber,
-                        uId: login.user!.uid,
-                        userImage: login.user!.photoURL,
-                      );
-                      createUser(userModal);
-                      widget.tabController.animateTo(2);
-                      SherdPrefe.prefs = await SharedPreferences.getInstance();
-                      await SherdPrefe.prefs!.setString("login", "yes");
-                    } else {
-                      CircularProgressIndicator();
-                    }
-                    print("Login");
-                  },
-                  child: Text("Google_Sign")),
+                if (login.user != null) {
+                  UserModal userModal = UserModal(
+                    email: login.user!.email,
+                    name: login.user!.displayName,
+                    phone: login.user!.phoneNumber,
+                    uId: login.user!.uid,
+                    userImage: login.user!.photoURL,
+                  );
+                  createUser(userModal);
+                  widget.tabController.animateTo(2);
+                  SherdPrefe.prefs = await SharedPreferences.getInstance();
+                  await SherdPrefe.prefs!.setString("login", "yes");
+                } else {
+                  CircularProgressIndicator();
+                }
+                print("Login");
+
+              },
+                text: "Google Sign",
+                icon: SvgPicture.asset("assets/icons/google.svg"),
+                type: GFButtonType.transparent,
+              ),
+
 
             ],
           ),

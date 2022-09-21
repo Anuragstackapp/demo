@@ -1,8 +1,10 @@
+import 'package:demo/common/constants/color_as.dart';
 import 'package:demo/model/dataread/dataRead.dart';
 import 'package:demo/pages/loginpage/Loginscrren.dart';
 import 'package:demo/pages/userspage/Userpage.dart';
 import 'package:demo/pages/adminpage/adminPage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Firstpage extends StatefulWidget {
   TabController tabController;
@@ -19,12 +21,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
   int curentindex = 0;
 
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
 
-  }
 
   // @override
   // void dispose() {
@@ -34,11 +31,17 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title:  Text("Task_Auth"),
+
+        systemOverlayStyle: SystemUiOverlayStyle(
+        // Status bar color
+        statusBarColor: ColorRsourse.splacesccrn),
+        title:  Text("Task_Auth"),
+
           bottom: PreferredSize(
             preferredSize: Size(00,55.0),
             child: IgnorePointer(

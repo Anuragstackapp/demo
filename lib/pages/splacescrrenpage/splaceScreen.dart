@@ -1,7 +1,9 @@
 
+import 'package:demo/common/constants/color_as.dart';
 import 'package:demo/pages/firstpage/Firstpage.dart';
 import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplaceScreen extends StatefulWidget {
@@ -26,7 +28,7 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
   }
 
   Future abc() async {
-   await Future.delayed(Duration(seconds: 3));
+   await Future.delayed(Duration(seconds: 4));
    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
      return Firstpage(tabController);
 
@@ -47,7 +49,11 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        body: Center(child: Text("Loding...")),
+        body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: ColorRsourse.splacesccrn,
+            child: Center(child: Lottie.asset("assets/animation/92477-wagmi-loading.json"))),
       ),
     );
   }

@@ -1,4 +1,5 @@
 
+import 'package:demo/common/constants/color_as.dart';
 import 'package:demo/pages/splacescrrenpage/splaceScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,10 +12,16 @@ void main() async {
   await Firebase.initializeApp(
 
   );
-  runApp(const MaterialApp(
+  runApp( MaterialApp(
 
     home: SplaceScreen(),
     debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+
+      appBarTheme: AppBarTheme(
+        color: ColorRsourse.splacesccrn,
+      ),
+    ),
   ));
 }
 

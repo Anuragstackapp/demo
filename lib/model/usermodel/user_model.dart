@@ -16,6 +16,7 @@ class UserModal {
     this.userImage,
     this.email,
     this.password,
+    this.type,
 
   });
 
@@ -25,6 +26,7 @@ class UserModal {
   String? userImage;
   String? email;
   String? password;
+  String? type;
 
   factory UserModal.fromJson(Map  json) => UserModal(
     uId: json["uId"],
@@ -33,6 +35,7 @@ class UserModal {
     userImage: json["userImage"],
     email: json["email"],
     password: json["password"],
+    type: json["type"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -42,5 +45,6 @@ class UserModal {
     "userImage": userImage,
     "email": email,
     "password":password,
+    "type":type
   };
 }
