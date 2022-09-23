@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/pages/restpasswordpage/restepassword.dart';
-import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
+import 'package:demo/common/constant/string_const.dart';
+import 'package:demo/service/sharedpreferences_service.dart';
 import 'package:demo/model/usermodel/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+
+import '../reste_password_page/reste_password_page.dart';
+
 
 class Loginscrren extends StatefulWidget {
   TabController tabController;
@@ -30,7 +33,7 @@ class _LoginscrrenState extends State<Loginscrren> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
+        FocusManager.instance.primaryFocus!.unfocus();
       },
       child: Scaffold(
         body: SingleChildScrollView(
@@ -43,8 +46,8 @@ class _LoginscrrenState extends State<Loginscrren> {
                   controller: temail,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'email',
-                    hintText: 'Enter Your email',
+                    labelText: StringResources.emailLabelText,
+                    hintText: StringResources.emailHintText,
                   ),
                 ),
               ),
@@ -56,8 +59,8 @@ class _LoginscrrenState extends State<Loginscrren> {
                   obscureText: _isObscure,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'password',
-                    hintText: 'Enter Your password',
+                    labelText: StringResources.passwordLabelText,
+                    hintText: StringResources.passwordHintText,
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -78,7 +81,7 @@ class _LoginscrrenState extends State<Loginscrren> {
 
                   SizedBox(width: 80),
                   Radio(
-                    value: "Admin",
+                    value: StringResources.userType1,
                     groupValue: _character,
                     onChanged: (value) {
                       setState(() {
@@ -88,7 +91,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                   ),
                   Text("Admin"),
                   Radio(
-                    value: "User",
+                    value: StringResources.userType2,
                     groupValue: _character,
                     onChanged: (value) {
                       setState(() {
@@ -114,9 +117,12 @@ class _LoginscrrenState extends State<Loginscrren> {
                   onPressed: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
 
-                    bool emailValid = RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                        .hasMatch(temail.text);
+
+                    bool emailValid = RegExp(StringResources.emailRegExp).hasMatch(temail.text);
+
+                    // bool emailValid = RegExp(
+                    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    //     .hasMatch(temail.text);
 
                     // String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                     // RegExp regExp = new RegExp(p);
@@ -155,8 +161,8 @@ class _LoginscrrenState extends State<Loginscrren> {
                         ),
                       );
                     } else {
-                      CircularProgressIndicator();
-                      String waiting = "some seconds wait";
+
+                      String waiting = "Loding..";
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(waiting),
@@ -177,14 +183,12 @@ class _LoginscrrenState extends State<Loginscrren> {
                       print(credential);
                       widget.tabController.animateTo(2);
 
-                      SherdPrefe.prefs = await SharedPreferences.getInstance();
-                      await SherdPrefe.prefs!.setString("login", "yes");
-
+                      setPrefKey("login", "yes");
                       UserModal usermodel = UserModal(
                         email: temail.text,
                         password: tpassword.text,
                         uId: credential.user!.uid,
-                        type: _character
+                        type: _character,
                       );
                       createUsers(usermodel);
                       temail.clear();
@@ -195,24 +199,27 @@ class _LoginscrrenState extends State<Loginscrren> {
                       } else if (e.code == 'email-already-in-use') {
                         print('The account already exists for that email.');
                         try {
-                          final credential = await FirebaseAuth.instance
+                          final UserCredential credential = await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                                   email: temail.text, password: tpassword.text);
-
+                           
+                          final DocumentReference check = FirebaseFirestore.instance.collection("user").doc(credential.user!.uid);
+                          print("Document ${check}");
+                         return;
                           UserModal usermodel = UserModal(
                               email: temail.text,
                               password: tpassword.text,
                               uId: credential.user!.uid,
                               type: _character,
-
                           );
-                          if (usermodel.uId == credential.user!.uid) {
+
+                          if(check.id != credential.user!.uid){
                             createUsers(usermodel);
                           }
 
-                          SherdPrefe.prefs =
-                              await SharedPreferences.getInstance();
-                          await SherdPrefe.prefs!.setString("login", "yes");
+
+                          setPrefKey("login", "yes");
+
                           temail.clear();
                           tpassword.clear();
                           widget.tabController.animateTo(2);
@@ -258,8 +265,13 @@ class _LoginscrrenState extends State<Loginscrren> {
                   );
                   createUser(userModal);
                   widget.tabController.animateTo(2);
-                  SherdPrefe.prefs = await SharedPreferences.getInstance();
-                  await SherdPrefe.prefs!.setString("login", "yes");
+                  
+
+
+                  setPrefKey("login", "yes");
+                  // SherdPrefe.prefs = await SharedPreferences.getInstance();
+                  // await prefs.setBool('login', true);
+                  // await SherdPrefe.prefs!.setString("login", "yes");
                 } else {
                   CircularProgressIndicator();
                 }

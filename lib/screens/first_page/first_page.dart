@@ -1,10 +1,10 @@
-import 'package:demo/common/constants/color_as.dart';
-import 'package:demo/model/dataread/dataRead.dart';
-import 'package:demo/pages/loginpage/Loginscrren.dart';
-import 'package:demo/pages/userspage/Userpage.dart';
-import 'package:demo/pages/adminpage/adminPage.dart';
+import 'package:demo/common/constant/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../common/constant/color_const.dart';
+import '../admin_page/admin_page.dart';
+import '../login_page/login_page.dart';
+import '../users_page/user_page.dart';
 
 class Firstpage extends StatefulWidget {
   TabController tabController;
@@ -18,16 +18,7 @@ class Firstpage extends StatefulWidget {
 
 class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMixin{
 
-  int curentindex = 0;
 
-
-
-
-  // @override
-  // void dispose() {
-  //   widget.tabController.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +31,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
         systemOverlayStyle: SystemUiOverlayStyle(
         // Status bar color
         statusBarColor: ColorRsourse.splacesccrn),
-        title:  Text("Task_Auth"),
+        title:  Text(StringResources.appbarTitle),
 
           bottom: PreferredSize(
             preferredSize: Size(00,55.0),
@@ -66,7 +57,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
                             child: SizedBox(
                                 height: 20,
                                 width: 40,
-                                child: Text("Login",
+                                child: Text(StringResources.tabbar1,
                                     style: TextStyle(color: Colors.white))),
                           ),
                         ],
@@ -88,7 +79,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
                             child: SizedBox(
                                 height: 20,
                                 width: 40,
-                                child: Text("Users",
+                                child: Text(StringResources.tabbar2,
                                     style: TextStyle(color: Colors.white))),
                           ),
                         ],
@@ -110,7 +101,7 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
                             child: SizedBox(
                                 height: 20,
                                 width: 40,
-                                child: Text("User",
+                                child: Text(StringResources.tabbar3,
                                     style: TextStyle(color: Colors.white,)
                                 )),
                           ),

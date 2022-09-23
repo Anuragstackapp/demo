@@ -12,7 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../model/sherdprefrnce/sprfrnce.dart';
+import '../../service/sharedpreferences_service.dart';
 
 class adminPage extends StatefulWidget {
   TabController tabController;
@@ -62,9 +62,7 @@ class _adminPageState extends State<adminPage> {
                       onPressed: () async {
                         await GoogleSignIn().signOut();
                         widget.tabController.animateTo(0);
-                        SherdPrefe.prefs =
-                            await SharedPreferences.getInstance();
-                        SherdPrefe.prefs!.clear();
+                       removePrefkey("login");
                       },
                       child: Icon(Icons.logout),
                       heroTag: 'btn2',

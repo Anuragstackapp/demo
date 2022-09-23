@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
+import 'package:demo/service/sharedpreferences_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -30,8 +30,9 @@ class _UserpageState extends State<Userpage> {
               await GoogleSignIn().signOut();
               print("Logut");
               widget.tabController.animateTo(0);
-              SherdPrefe.prefs = await SharedPreferences.getInstance();
-              SherdPrefe.prefs!.clear();
+              // SherdPrefe.prefs = await SharedPreferences.getInstance();
+              // SherdPrefe.prefs!.clear();
+              removePrefkey("login");
             },
             child: Icon(Icons.logout)),
         body: StreamBuilder<List<UserModal>>(

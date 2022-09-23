@@ -1,10 +1,11 @@
-
-import 'package:demo/common/constants/color_as.dart';
-import 'package:demo/pages/firstpage/Firstpage.dart';
-import 'package:demo/model/sherdprefrnce/sprfrnce.dart';
+import 'package:demo/common/constant/image_const.dart';
+import 'package:demo/service/sharedpreferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../common/constant/color_const.dart';
+import '../first_page/first_page.dart';
+
 
 class SplaceScreen extends StatefulWidget {
   const SplaceScreen({Key? key}) : super(key: key);
@@ -33,8 +34,8 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
      return Firstpage(tabController);
 
    },));
-   SherdPrefe.prefs = await SharedPreferences.getInstance();
-   if(SherdPrefe.prefs!.containsKey("login")){
+
+   if(await checkPrefKey("login")){
      tabController.animateTo(2);
    }
    else{
@@ -53,7 +54,7 @@ class _SplaceScreenState extends State<SplaceScreen> with SingleTickerProviderSt
             height: double.infinity,
             width: double.infinity,
             color: ColorRsourse.splacesccrn,
-            child: Center(child: Lottie.asset("assets/animation/92477-wagmi-loading.json"))),
+            child: Center(child: Lottie.asset(ImageResources.splaceLogo))),
       ),
     );
   }
