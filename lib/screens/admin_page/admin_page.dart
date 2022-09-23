@@ -150,6 +150,7 @@ class _adminPageState extends State<adminPage> {
                                                 var file = File(photo!.path);
 
                                                 if (photo != null) {
+
                                                   var snapshot = await storageRef
                                                       .ref()
                                                       .child(
@@ -164,6 +165,7 @@ class _adminPageState extends State<adminPage> {
                                                   });
                                                   if (downloadUrl == null) {
                                                     CircularProgressIndicator();
+
                                                   }
 
                                                 }

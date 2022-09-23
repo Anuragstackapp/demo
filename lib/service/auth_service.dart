@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demo/model/dataread/dataRead.dart';
 import 'package:demo/service/sharedpreferences_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/material/tab_controller.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -57,12 +59,20 @@ class AuthService{
           email: email, password: password);
 
       final DocumentReference check = FirebaseFirestore.instance.collection("user").doc(credential.user!.uid);
-      final data = FirebaseFirestore.instance.collection("user");
+      final data = FirebaseFirestore.instance.collection("user").snapshots();
 
+      QuerySnapshot users = await FirebaseFirestore.instance.collection('users').get();
+      List<UserModal> userModelList = <UserModal>[];
+      for (QueryDocumentSnapshot element in users.docs) {
+        UserModal userModal = UserModal.fromJson(element.data() as Map<String, dynamic>);
+        userModelList.add(userModal);
+      }
+      UserModal currentUSerModel = userModelList.firstWhere((element) => element.uId == credential.user!.uid,
+          orElse: () => UserModal());
+      if(currentUSerModel.uId!.isEmpty) {
 
+      }
 
-      // print("Document ${check}");
-      // return;
       UserModal usermodel = UserModal(
               email: email,
               password: password,
