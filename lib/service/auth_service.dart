@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/model/dataread/dataRead.dart';
 import 'package:demo/service/sharedpreferences_service.dart';
@@ -59,7 +61,14 @@ class AuthService{
           email: email, password: password);
 
       final DocumentReference check = FirebaseFirestore.instance.collection("user").doc(credential.user!.uid);
-      final data = FirebaseFirestore.instance.collection("user").snapshots();
+      // final data = FirebaseFirestore.instance.collection("user").snapshots();
+
+      UserModal usermodel = UserModal(
+        email: email,
+        password: password,
+        uId: credential.user!.uid,
+        type: character,
+      );
 
       QuerySnapshot users = await FirebaseFirestore.instance.collection('users').get();
       List<UserModal> userModelList = <UserModal>[];
@@ -69,16 +78,17 @@ class AuthService{
       }
       UserModal currentUSerModel = userModelList.firstWhere((element) => element.uId == credential.user!.uid,
           orElse: () => UserModal());
-      if(currentUSerModel.uId!.isEmpty) {
+      logs('createUsers --->  ${currentUSerModel.toJson()}');
+      if(currentUSerModel.uId == null && currentUSerModel.uId!.isEmpty) {
+        createUsers(usermodel);
 
+        tabController.animateTo(2);
+
+      }else{
+        tabController.animateTo(2);
       }
 
-      UserModal usermodel = UserModal(
-              email: email,
-              password: password,
-              uId: credential.user!.uid,
-              type: character,
-            );
+
 
             if(check.id != credential.user!.uid){
               createUsers(usermodel);
@@ -87,7 +97,7 @@ class AuthService{
 
             setPrefKey("login", "yes");
 
-            tabController.animateTo(2);
+
             print(credential);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
