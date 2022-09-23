@@ -26,6 +26,7 @@ class adminPage extends StatefulWidget {
 class _adminPageState extends State<adminPage> {
   bool status = false;
   bool check = false;
+  bool photoSatus = false;
   String auth = FirebaseAuth.instance.currentUser!.uid;
   late UserModal userModal;
   TextEditingController tname = TextEditingController();
@@ -164,6 +165,7 @@ class _adminPageState extends State<adminPage> {
                                                   if (downloadUrl == null) {
                                                     CircularProgressIndicator();
                                                   }
+
                                                 }
                                               },
                                               icon: Icon(Icons.camera_alt)),
@@ -176,8 +178,7 @@ class _adminPageState extends State<adminPage> {
                               },
                               text: 'Select Image',
                               type: GFButtonType.transparent),
-                          imageUrl != null
-                              ? ElevatedButton(
+                           ElevatedButton(
                                   onPressed: () {
                                     FirebaseFirestore.instance
                                         .collection("user")
@@ -194,7 +195,7 @@ class _adminPageState extends State<adminPage> {
                                     tname.clear();
                                   },
                                   child: Text("Update"))
-                              : Text("Waiting "),
+
                         ],
                       ),
                     );

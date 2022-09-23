@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/service/sharedpreferences_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_helpers/firebase_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,12 +74,14 @@ class _UserpageState extends State<Userpage> {
                     content: Text("Are You sure to delete this contect"),
                     actions: [
                       TextButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final docUser = FirebaseFirestore.instance
                                 .collection('user')
                                 .doc(userModal.uId);
                             docUser.delete();
                             Navigator.pop(context);
+
+
                           },
                           child: Text("Yes")),
                       TextButton(

@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/common/constant/string_const.dart';
+import 'package:demo/common/method/methods.dart';
+import 'package:demo/service/auth_service.dart';
 import 'package:demo/service/sharedpreferences_service.dart';
 import 'package:demo/model/usermodel/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +26,7 @@ class Loginscrren extends StatefulWidget {
 class _LoginscrrenState extends State<Loginscrren> {
   TextEditingController temail = TextEditingController();
   TextEditingController tpassword = TextEditingController();
-  bool chack = false;
+  bool schack = false;
   bool _isObscure = true;
   String _character = "User";
 
@@ -117,136 +118,34 @@ class _LoginscrrenState extends State<Loginscrren> {
                   onPressed: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
 
-
                     bool emailValid = RegExp(StringResources.emailRegExp).hasMatch(temail.text);
 
-                    // bool emailValid = RegExp(
-                    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    //     .hasMatch(temail.text);
-
-                    // String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                    // RegExp regExp = new RegExp(p);
-
                     if (emailValid == false && tpassword.text.length < 8) {
-                      String errorA = "email and password not vaild";
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(errorA),
-                          action: SnackBarAction(
-                            label: 'Action',
-                            onPressed: () {},
-                          ),
-                        ),
-                      );
+                      String message = "email and password not vaild";
+                      showMessage(context, message);
+
                     } else if (emailValid == false) {
-                      String errorB = "email is Not Vaild!";
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(errorB),
-                          action: SnackBarAction(
-                            label: 'Action',
-                            onPressed: () {},
-                          ),
-                        ),
-                      );
+                      String message = "email is Not Vaild!";
+                      showMessage(context, message);
+
                     } else if (tpassword.text.length < 8) {
-                      String errorC = "Minum 8 lettor in Password";
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(errorC),
-                          action: SnackBarAction(
-                            label: 'Action',
-                            onPressed: () {},
-                          ),
-                        ),
-                      );
+                      String message = "Minum 8 lettor in Password";
+                      showMessage(context, message);
+
                     } else {
 
-                      String waiting = "Loding..";
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(waiting),
-                          action: SnackBarAction(
-                            label: 'Action',
-                            onPressed: () {},
-                          ),
-                        ),
-                      );
+                      String message = "Loding..";
+                      showMessage(context, message);
+
+                      setState(() {
+                        schack = false;
+                      });
+
                     }
+                    AuthService().createUser(temail.text,tpassword.text,widget.tabController,_character,context);
 
-                    try {
-                      final credential = await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                        email: temail.text,
-                        password: tpassword.text,
-                      );
-                      print(credential);
-                      widget.tabController.animateTo(2);
+                    // AuthService().verifyUser(context,temail.text,tpassword.text,widget.tabController,_character);
 
-                      setPrefKey("login", "yes");
-                      UserModal usermodel = UserModal(
-                        email: temail.text,
-                        password: tpassword.text,
-                        uId: credential.user!.uid,
-                        type: _character,
-                      );
-                      createUsers(usermodel);
-                      temail.clear();
-                      tpassword.clear();
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'weak-password') {
-                        print('The password provided is too weak.');
-                      } else if (e.code == 'email-already-in-use') {
-                        print('The account already exists for that email.');
-                        try {
-                          final UserCredential credential = await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: temail.text, password: tpassword.text);
-                           
-                          final DocumentReference check = FirebaseFirestore.instance.collection("user").doc(credential.user!.uid);
-                          print("Document ${check}");
-                         return;
-                          UserModal usermodel = UserModal(
-                              email: temail.text,
-                              password: tpassword.text,
-                              uId: credential.user!.uid,
-                              type: _character,
-                          );
-
-                          if(check.id != credential.user!.uid){
-                            createUsers(usermodel);
-                          }
-
-
-                          setPrefKey("login", "yes");
-
-                          temail.clear();
-                          tpassword.clear();
-                          widget.tabController.animateTo(2);
-                          print(credential);
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'user-not-found') {
-                            print('No user found for that email.');
-                          } else if (e.code == 'wrong-password') {
-                            print('Wrong password provided for that user.');
-
-                            String errorD =
-                                "Wrong password provided for that user.";
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(errorD),
-                                action: SnackBarAction(
-                                  label: 'Action',
-                                  onPressed: () {},
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      }
-                    } catch (e) {
-                      print(e);
-                    }
                   },
                   child: const Text("Login")),
               //google login
@@ -310,20 +209,5 @@ class _LoginscrrenState extends State<Loginscrren> {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-//firbase sore in data google
-  Future createUser(UserModal userModal) async {
-    final firestore =
-        FirebaseFirestore.instance.collection("user").doc("${userModal.uId}");
 
-    await firestore.set(userModal.toJson());
-  }
-
-  Future createUsers(UserModal usermodel) async {
-    final firestore =
-        FirebaseFirestore.instance.collection("user").doc(usermodel.uId);
-
-    final json = usermodel.toJson();
-
-    await firestore.set(json);
-  }
 }
