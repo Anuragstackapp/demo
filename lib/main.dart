@@ -12,14 +12,19 @@ void main() async {
   await Firebase.initializeApp(
 
   );
-  runApp( MaterialApp(
+  runApp( GestureDetector(
+    onTap: () {
+      FocusManager.instance.primaryFocus!.unfocus();
+    },
+    child: MaterialApp(
 
-    home: SplaceScreen(),
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
+      home: SplaceScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
 
-      appBarTheme: AppBarTheme(
-        color: ColorRsourse.splacesccrn,
+        appBarTheme: AppBarTheme(
+          color: ColorRsourse.splacesccrn,
+        ),
       ),
     ),
   ));

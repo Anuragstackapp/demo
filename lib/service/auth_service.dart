@@ -16,7 +16,7 @@ class AuthService{
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  Future<UserCredential?> createUser(String email,String password, TabController tabController, String character, BuildContext context) async {
+  Future<UserCredential?> createUser(String email,String password, TabController tabController, String character,int i, BuildContext context) async {
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -24,7 +24,7 @@ class AuthService{
         password: password,
       );
       print(credential);
-      tabController.animateTo(2);
+      tabController.animateTo(i);
 
 
       setPrefKey("login", "yes");
@@ -70,16 +70,18 @@ class AuthService{
         type: character,
       );
 
-      QuerySnapshot users = await FirebaseFirestore.instance.collection('users').get();
+      QuerySnapshot users = await FirebaseFirestore.instance.collection('user').get();
       List<UserModal> userModelList = <UserModal>[];
       for (QueryDocumentSnapshot element in users.docs) {
         UserModal userModal = UserModal.fromJson(element.data() as Map<String, dynamic>);
+        logs('userModel uid --->  ${userModal.toJson()}');
         userModelList.add(userModal);
       }
+      logs('createUsers uid --->  ${credential.user!.uid}');
       UserModal currentUSerModel = userModelList.firstWhere((element) => element.uId == credential.user!.uid,
           orElse: () => UserModal());
       logs('createUsers --->  ${currentUSerModel.toJson()}');
-      if(currentUSerModel.uId == null && currentUSerModel.uId!.isEmpty) {
+      if(currentUSerModel.uId == null || currentUSerModel.uId!.isEmpty) {
         createUsers(usermodel);
 
         tabController.animateTo(2);
@@ -90,13 +92,7 @@ class AuthService{
 
 
 
-            if(check.id != credential.user!.uid){
-              createUsers(usermodel);
-            }
-
-
             setPrefKey("login", "yes");
-
 
             print(credential);
     } on FirebaseAuthException catch (e) {

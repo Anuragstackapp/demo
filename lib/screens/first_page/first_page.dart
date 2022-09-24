@@ -1,4 +1,5 @@
 import 'package:demo/common/constant/string_const.dart';
+import 'package:demo/screens/api_page/api_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../common/constant/color_const.dart';
@@ -27,6 +28,19 @@ class _FirstpageState extends State<Firstpage> with SingleTickerProviderStateMix
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                  return ApiPage();
+                },));
+              }, icon: Icon(
+                Icons.view_compact_alt_outlined,
+              ),),
+            ),
+          ],
 
         systemOverlayStyle: SystemUiOverlayStyle(
         // Status bar color

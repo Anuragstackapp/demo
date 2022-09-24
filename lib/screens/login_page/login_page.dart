@@ -1,5 +1,6 @@
 import 'package:demo/common/constant/string_const.dart';
 import 'package:demo/common/method/methods.dart';
+import 'package:demo/screens/signup_page/signup_page.dart';
 import 'package:demo/service/auth_service.dart';
 import 'package:demo/service/sharedpreferences_service.dart';
 import 'package:demo/model/usermodel/user_model.dart';
@@ -29,6 +30,7 @@ class _LoginscrrenState extends State<Loginscrren> {
   bool schack = false;
   bool _isObscure = true;
   String _character = "User";
+  int i = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +144,7 @@ class _LoginscrrenState extends State<Loginscrren> {
                       });
 
                     }
-                    AuthService().createUser(temail.text,tpassword.text,widget.tabController,_character,context);
+                    AuthService().createUser(temail.text,tpassword.text,widget.tabController,_character,i,context);
 
                     // AuthService().verifyUser(context,temail.text,tpassword.text,widget.tabController,_character);
 
@@ -181,6 +183,12 @@ class _LoginscrrenState extends State<Loginscrren> {
                 icon: SvgPicture.asset("assets/icons/google.svg"),
                 type: GFButtonType.transparent,
               ),
+
+              TextButton(onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                  return SignupPage(widget.tabController);
+                },));
+              }, child: Text("New User ? Create Account"))
 
 
             ],

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+
 import '../../model/usermodel/user_model.dart';
 
 logs(String messge){
@@ -36,6 +37,3 @@ Future createUsers(UserModal usermodel) async {
   await firestore.set(json);
 }
 
-deleteData(){
-
-}
