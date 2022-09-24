@@ -35,7 +35,7 @@ class _ApiPageState extends State<ApiPage> {
     AudioData();
   }
 
-  loadData() async {
+ void loadData() async {
     var url = Uri.parse('https://audio-kumbh.herokuapp.com/api/v1/banner');
     var response = await http.get(url);
     print('Response status: ${response.statusCode}');
@@ -52,7 +52,7 @@ class _ApiPageState extends State<ApiPage> {
     });
   }
 
-  CategoriesData() async {
+  void CategoriesData() async {
     var url = Uri.parse(
         'https://audio-kumbh.herokuapp.com/api/v2/category/audiobook');
     var response = await http.get(url, headers: {
@@ -71,7 +71,7 @@ class _ApiPageState extends State<ApiPage> {
     });
   }
 
-  AudioData() async {
+ void AudioData() async {
     var url =
         Uri.parse('https://audio-kumbh.herokuapp.com/api/v2/homepage/category');
     var response = await http.post(url, headers: {
